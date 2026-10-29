@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026년 한국 해외여행 동향 및 산업 구조 재편 심층 대시보드 (KRDS)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        krds: {
+                            primary: '#0055D4',
+                            primaryDark: '#003679',
+                            navy: '#0F172A',
+                            bg: '#F8FAFC',
+                            surface: '#FFFFFF',
+                            border: '#E2E8F0',
+                            subtle: '#F1F5F9',
+                            text: '#1E293B',
+                            muted: '#64748B',
+                        },
+                        accent: {
+                            teal: '#00838F',
+                            amber: '#D97706',
+                            rose: '#E11D48',
+                            purple: '#6B21A8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 3px;
+        }
+        /* KRDS Tab Underline Indicator */
+        .krds-tab-active {
+            color: #0055D4 !important;
+            border-bottom: 3px solid #0055D4 !important;
+            background-color: #F0F5FF !important;
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased leading-relaxed min-h-screen flex flex-col">
+
+    <!-- Chosen Palette: KRDS Official Palette (KRDS Primary Blue #0055D4, Deep Government Navy #0F172A, Clean White #FFFFFF, Warm Light Neutral #F8FAFC, High-Contrast Borders #E2E8F0) -->
+    <!-- Application Structure Plan:
+         1. KRDS Standard Top Utility & Header Bar: Formatted according to South Korean Republic Design System guidelines. Includes official title, metadata badges, and high-contrast system typography.
+         2. Metric Highlights Grid: Standardized KRDS KPI cards with clean top accent borders and high-visibility status indicators.
+         3. Accessible KRDS Tab Navigation: High-contrast tab control with active indicator bars and ARIA semantic accessibility labels.
+         4. Content Panels (1-5):
+            - Panel 1: Macro & Travel Balance Dual Chart & Analytical Cards.
+            - Panel 2: Destination Shares & Filterable Interactive Japanese Micro-City Grid.
+            - Panel 3: Demographic Behavioral Differences & AI Adoption Doughnut Chart.
+            - Panel 4: Channel FIT Migration Pie Chart & HanaTour M.O.M.E.N.T.U.M. Accordion Component.
+            - Panel 5: Micro-Trends & Regulatory Policy (ETIAS, Fuel Surcharges) Interactive Cards.
+         WHY THIS STRUCTURE: Preserves 100% of the analytical depth and data from the report while restructuring the design tokens, component hierarchy, line heights, contrast ratios, and iconography to strictly comply with the KRDS (Korea Republic Design System) guidelines. -->
+    <!-- Visualization & Content Choices:
+         - Macro Travel Balance: Chart.js Line/Bar dual axis using KRDS Primary Blue (#0055D4) and KRDS Teal (#00838F).
+         - Destination Breakdown: Chart.js Horizontal Bar for H1 visitor volumes with KRDS accessibility tooltips.
+         - Generational AI: Chart.js Doughnut Chart with distinct contrast colors.
+         - Channel Distribution: Chart.js Pie Chart for FIT vs Package ratio.
+         - Confirmation: NO SVG graphics used. NO Mermaid JS used. Relying exclusively on Tailwind CSS layout, HTML Unicode visual components, and Canvas API via Chart.js. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Top KRDS Government / Official Style Accent Line -->
+    <div class="h-1 bg.krds-primary bg-[#0055D4]"></div>
+
+    <!-- KRDS Header Section -->
+    <header class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-[#0055D4] border border-blue-200 font-bold">
+                            KRDS 표준 적용 대시보드
+                        </span>
+                        <span class="text-slate-300">|</span>
+                        <span class="text-slate-600 font-medium">2026 해외여행 동향 보고서</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-amber-700 font-bold">사상 최초 3,000만 출국 시대</span>
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+                        2026년 한국인 해외여행 동향 & 산업 구조 재편
+                    </h1>
+                </div>
+                <!-- KRDS Quick Status Card -->
+                <div class="flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-lg border border-slate-200">
+                    <div class="text-right">
+                        <span class="block text-xs font-medium text-slate-500">2026 상반기 출국자</span>
+                        <span class="font-bold text-[#0055D4] text-sm">1,496.2만 명 (+2.7%)</span>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div class="text-right">
+                        <span class="block text-xs font-medium text-slate-500">관광수지 (3~6월)</span>
+                        <span class="font-bold text-teal-700 text-sm">4개월 연속 흑자</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- Executive Summary Stats Grid (KRDS Card Style) -->
+        <section class="mb-8" aria-label="주요 핵심 지표 요약">
+            <h2 class="sr-only">핵심 지표 요약</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1 -->
+                <div class="bg-white p-5 rounded-lg border-t-4 border-t-[#0055D4] border-x border-b border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">연간 예상 출국자</span>
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-[#0055D4] text-xs font-bold">🚀</span>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-2xl md:text-3xl font-black text-slate-900">3,000만 명+</span>
+                        <p class="text-xs text-slate-600 mt-1 font-medium">인구 절반 이상 연 1회 출국 (사상 최대)</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-5 rounded-lg border-t-4 border-t-teal-600 border-x border-b border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">자유여행(FIT) 비중</span>
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-teal-50 text-teal-700 text-xs font-bold">🗺️</span>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-2xl md:text-3xl font-black text-slate-900">65.0%</span>
+                        <p class="text-xs text-slate-600 mt-1 font-medium">역대 최고치 (20대 78%, 30대 70%)</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-5 rounded-lg border-t-4 border-t-amber-500 border-x border-b border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">관광수지 흑자 전환</span>
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-50 text-amber-700 text-xs font-bold">📈</span>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-2xl md:text-3xl font-black text-slate-900">11년 4개월 만</span>
+                        <p class="text-xs text-slate-600 mt-1 font-medium">3월 +2.6억$ 시작으로 4개월 연속 흑자</p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white p-5 rounded-lg border-t-4 border-t-purple-600 border-x border-b border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Z세대 AI 활용률</span>
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-purple-50 text-purple-700 text-xs font-bold">🤖</span>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-2xl md:text-3xl font-black text-slate-900">74.0%</span>
+                        <p class="text-xs text-slate-600 mt-1 font-medium">일정·비용 비교에 생성형 AI 적극 활용</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KRDS Accessible Tab Navigation Bar -->
+        <div class="border-b border-slate-200 mb-8 bg-white rounded-lg p-1.5 shadow-sm border">
+            <nav class="flex overflow-x-auto space-x-1 custom-scrollbar" aria-label="주요 분야별 탭 메뉴">
+                <button onclick="switchTab('tab-macro')" id="btn-tab-macro" class="tab-btn krds-tab-active px-4 py-3 font-semibold text-sm rounded-md whitespace-nowrap text-slate-700 hover:bg-slate-100 transition">
+                    1. 거시 지표 & 관광수지
+                </button>
+                <button onclick="switchTab('tab-destinations')" id="btn-tab-destinations" class="tab-btn px-4 py-3 font-semibold text-sm rounded-md whitespace-nowrap text-slate-700 hover:bg-slate-100 transition">
+                    2. 목적지 & 소도시 재발견
+                </button>
+                <button onclick="switchTab('tab-generations')" id="btn-tab-generations" class="tab-btn px-4 py-3 font-semibold text-sm rounded-md whitespace-nowrap text-slate-700 hover:bg-slate-100 transition">
+                    3. 세대별 소비 패러다임
+                </button>
+                <button onclick="switchTab('tab-channels')" id="btn-tab-channels" class="tab-btn px-4 py-3 font-semibold text-sm rounded-md whitespace-nowrap text-slate-700 hover:bg-slate-100 transition">
+                    4. FIT 독주 & 패키지 진화
+                </button>
+                <button onclick="switchTab('tab-trends')" id="btn-tab-trends" class="tab-btn px-4 py-3 font-semibold text-sm rounded-md whitespace-nowrap text-slate-700 hover:bg-slate-100 transition">
+                    5. 마이크로 트렌드 & 변수
+                </button>
+            </nav>
+        </div>
+
+        <!-- TAB 1: MACRO & TRAVEL BALANCE -->
+        <div id="tab-macro" class="tab-content block space-y-6">
+            <div class="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+                <!-- Section Header with KRDS Accent Bar -->
+                <div class="mb-6 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="w-1.5 h-4 bg-[#0055D4] rounded-full"></span>
+                        <span class="text-xs font-bold text-[#0055D4] uppercase tracking-wide">Macro Economic Overview</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">3고(高) 악조건 속 인·아웃바운드 교차와 관광수지 흑자 구조</h3>
+                    <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                        2026년 상반기 해외 출국자 수는 1,496.2만 명(+2.7%)으로 회복 임계점에 진입했습니다. 고환율(1,500원대)과 고유가 속에서 해외여행 취소 대신 **여행 기간 단축 및 단거리 재편**을 선택했으며, 외래관광객 증가와 내국인 1인당 지출 감소가 결합하여 11년 4개월 만의 월간 관광수지 흑자(3~6월)를 달성했습니다.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Chart Container -->
+                    <div class="lg:col-span-2 bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+                            <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-[#0055D4]"></span>
+                                2026년 상반기 월별 출국자 vs 방한 외래객 추이
+                            </h4>
+                            <span class="text-xs text-slate-500 font-medium">단위: 만 명</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="macroChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-3 text-center bg-white p-2 rounded border border-slate-200">
+                            * 5월(-2.1%), 6월(-10.0%) 역성장 후 8월(+0.4%) 반등. 출국자-방한객 격차가 급격히 축소됨.
+                        </p>
+                    </div>
+
+                    <!-- Side Stat Card Panel -->
+                    <div class="space-y-4 flex flex-col justify-between">
+                        <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-lg">
+                            <h4 class="text-sm font-bold text-[#003679] mb-2 flex items-center gap-1.5">
+                                <span>💡</span> 관광수지 개선의 회계적 원인
+                            </h4>
+                            <ul class="text-xs text-slate-700 space-y-2 font-medium">
+                                <li class="flex items-start gap-1.5">
+                                    <span class="text-[#0055D4] font-bold">•</span>
+                                    <span><strong>내국인 1인당 지출:</strong> 993.7달러 (전년 대비 -6.0% 감소)</span>
+                                </li>
+                                <li class="flex items-start gap-1.5">
+                                    <span class="text-[#0055D4] font-bold">•</span>
+                                    <span><strong>외국인 1인당 지출:</strong> 전년 대비 +12.4% 증가</span>
+                                </li>
+                                <li class="flex items-start gap-1.5">
+                                    <span class="text-[#0055D4] font-bold">•</span>
+                                    <span><strong>총 관광수입:</strong> 136.1억 달러 (전년 대비 +36.4% 급증)</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-amber-50/70 border border-amber-200 p-4 rounded-lg">
+                            <h4 class="text-sm font-bold text-amber-900 mb-1.5 flex items-center gap-1.5">
+                                <span>📊</span> 환율과 실질실효환율 영향
+                            </h4>
+                            <p class="text-xs text-slate-700 leading-relaxed font-medium">
+                                실질실효환율은 1월 87.02에서 6월 83.06으로 지속 하락했습니다. 원화 약세는 아웃바운드 1인당 지출을 억제하는 동시에 인바운드 외국인의 한국 내 구매력을 극대화시켰습니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-100 p-4 rounded-lg border border-slate-200">
+                            <div class="text-xs font-bold text-slate-700 mb-1">2025년 시장 회고 (기반 데이터)</div>
+                            <p class="text-xs text-slate-600">
+                                2025년 연간 출국자는 2,955만 명이었으며, FIT 비중 65% 달성으로 단거리·가심비 중심 시장 체질 변환이 완성되었습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DESTINATIONS & MICRO CITIES -->
+        <div id="tab-destinations" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+                <div class="mb-6 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="w-1.5 h-4 bg-teal-600 rounded-full"></span>
+                        <span class="text-xs font-bold text-teal-700 uppercase tracking-wide">Destination Dynamics</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">아시아 쏠림(80%+)과 일본 소도시 파편화(Fragmentation)</h3>
+                    <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                        비행시간 2~3시간 내 근거리 아시아 시장으로 전체 해외여행 수요의 80% 이상이 집중되었습니다. 엔저 효과로 일본 방문객 비율은 37.9%까지 급등하였고, 도쿄·오사카 대신 소도시 온천 및 휴양지로 소비가 다변화되었습니다.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Destination Share Chart -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+                            <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-teal-600"></span>
+                                2026년 상반기 주요 목적지별 방문객 수
+                            </h4>
+                            <span class="text-xs text-slate-500 font-medium">단위: 만 명</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="destinationChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- KRDS Standard Table -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2 border-b border-slate-200 pb-2">
+                                <span class="w-2 h-2 rounded-full bg-[#0055D4]"></span>
+                                주요 국가별 동향 분석 요약
+                            </h4>
+                            <div class="overflow-x-auto rounded border border-slate-200 bg-white">
+                                <table class="w-full text-xs text-left text-slate-700">
+                                    <thead class="text-xs text-slate-800 uppercase bg-slate-100 border-b border-slate-200">
+                                        <tr>
+                                            <th class="px-3.5 py-2.5 font-bold">국가</th>
+                                            <th class="px-3.5 py-2.5 font-bold">2026 상반기</th>
+                                            <th class="px-3.5 py-2.5 font-bold">주요 특징 및 트렌드</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-200">
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-3.5 py-2.5 font-bold text-slate-900">🇯🇵 일본</td>
+                                            <td class="px-3.5 py-2.5 font-bold text-[#0055D4]">567.5만 명</td>
+                                            <td class="px-3.5 py-2.5">전년比 +18.6%, 소도시 트래픽 폭증</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-3.5 py-2.5 font-bold text-slate-900">🇻🇳 베트남</td>
+                                            <td class="px-3.5 py-2.5 font-bold text-teal-700">216.1만 명</td>
+                                            <td class="px-3.5 py-2.5">다낭/나트랑 유지, 푸꾸옥 럭셔리화</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-3.5 py-2.5 font-bold text-slate-900">🇨🇳 중국</td>
+                                            <td class="px-3.5 py-2.5 font-bold text-amber-700">171.4만 명</td>
+                                            <td class="px-3.5 py-2.5">비자 완화 효과, 젊은 층 FIT 급증</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-3.5 py-2.5 font-bold text-slate-900">🇺🇸 미국</td>
+                                            <td class="px-3.5 py-2.5 font-bold text-rose-700">63.2만 명</td>
+                                            <td class="px-3.5 py-2.5">2019년比 -40.8% (고환율 진입장벽)</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-3.5 py-2.5 font-bold text-slate-900">🇹🇭 태국</td>
+                                            <td class="px-3.5 py-2.5 font-medium text-slate-600">58.7만 명</td>
+                                            <td class="px-3.5 py-2.5">2019년比 -35.3% (동남아 회복차별화)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-white rounded border border-slate-200 text-xs text-slate-600">
+                            <strong>장거리 침체 이유:</strong> 미국·유럽 체재비 상승과 고환율로 인해 장거리 예산을 아시아 근거리 프리미엄 숙박으로 재배정하는 '가성비 럭셔리' 경향 심화.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KRDS Interactive Japan Micro-City Explorer -->
+                <div class="bg-slate-900 text-white p-6 rounded-lg border border-slate-800">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-slate-800 pb-3">
+                        <div>
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Interactive Deep-Dive</span>
+                            <h4 class="text-lg font-bold text-white mt-0.5">🇯🇵 급부상하는 일본 소도시 검색 증가율 Explorer</h4>
+                        </div>
+                        <div class="text-xs text-slate-400 bg-slate-800 px-3 py-1 rounded border border-slate-700">
+                            클룩(Klook) 데이터 기준 (전년 대비 검색 증가율)
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                        <button onclick="showCityDetail('matsuyama')" class="bg-slate-800 hover:bg-slate-700 p-3 rounded border border-slate-700 text-left transition group">
+                            <span class="text-xs text-slate-400 block">온천 & 휴양</span>
+                            <span class="font-bold text-white group-hover:text-amber-400">마쓰야마</span>
+                            <span class="text-sm font-black text-amber-400 block mt-1">+318%</span>
+                        </button>
+
+                        <button onclick="showCityDetail('miyakojima')" class="bg-slate-800 hover:bg-slate-700 p-3 rounded border border-slate-700 text-left transition group">
+                            <span class="text-xs text-slate-400 block">오키나와 근해</span>
+                            <span class="font-bold text-white group-hover:text-amber-400">미야코지마</span>
+                            <span class="text-sm font-black text-amber-400 block mt-1">+281%</span>
+                        </button>
+
+                        <button onclick="showCityDetail('kitakyushu')" class="bg-slate-800 hover:bg-slate-700 p-3 rounded border border-slate-700 text-left transition group">
+                            <span class="text-xs text-slate-400 block">큐슈 북부</span>
+                            <span class="font-bold text-white group-hover:text-amber-400">기타큐슈</span>
+                            <span class="text-sm font-black text-amber-400 block mt-1">+265%</span>
+                        </button>
+
+                        <button onclick="showCityDetail('hiroshima')" class="bg-slate-800 hover:bg-slate-700 p-3 rounded border border-slate-700 text-left transition group">
+                            <span class="text-xs text-slate-400 block">역사 & 미식</span>
+                            <span class="font-bold text-white group-hover:text-amber-400">히로시마</span>
+                            <span class="text-sm font-black text-amber-400 block mt-1">+220%</span>
+                        </button>
+
+                        <button onclick="showCityDetail('biei')" class="bg-slate-800 hover:bg-slate-700 p-3 rounded border border-slate-700 text-left transition group">
+                            <span class="text-xs text-slate-400 block">홋카이도 자연</span>
+                            <span class="font-bold text-white group-hover:text-amber-400">비에이</span>
+                            <span class="text-sm font-black text-amber-400 block mt-1">+204%</span>
+                        </button>
+                    </div>
+
+                    <!-- Dynamic City Detail Box -->
+                    <div id="city-detail-box" class="mt-4 p-4 bg-slate-950 rounded border border-slate-800 text-xs text-slate-200 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-amber-400 text-sm" id="city-title">마쓰야마 (Matsuyama)</span>
+                            <p class="mt-1 text-slate-300" id="city-desc">대도시 오버투어리즘과 숙박비 인상을 피해 온천과 가성비를 동시에 갖춘 대안 도시. 호텔 검색 트래픽 전년 대비 <strong class="text-white">+825% 폭증</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: GENERATIONAL CONSUMPTION -->
+        <div id="tab-generations" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+                <div class="mb-6 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="w-1.5 h-4 bg-purple-600 rounded-full"></span>
+                        <span class="text-xs font-bold text-purple-700 uppercase tracking-wide">Demographic Dynamics</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">세대별 소비 양극화: Z세대의 AI여행 vs 5060 덕질 여행</h3>
+                    <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                        여행 의향 조사에서 20대(96.9%)와 50대(96.4%)가 가장 높은 의지를 보였습니다. Z세대는 생성형 AI로 초단기 맞춤 여행을 설계하는 반면, 5060 액티브 시니어는 강력한 구매력을 바탕으로 공연·스포츠 '덕질 여행'을 주도합니다.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- AI Usage Breakdown Chart -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <div class="mb-3 border-b border-slate-200 pb-2">
+                            <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                                한국 Z세대 AI 활용 분야
+                            </h4>
+                            <span class="text-xs text-slate-500">스카이스캐너 2026 조사 (전체 Z세대 74% AI 활용)</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="aiUsageChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gen Comparison Cards -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Z Gen Card -->
+                            <div class="bg-purple-50/60 p-5 rounded-lg border border-purple-200 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3 border-b border-purple-200 pb-2">
+                                        <span class="px-2.5 py-0.5 bg-purple-200 text-purple-900 text-xs font-bold rounded">20대 Z세대</span>
+                                        <span class="text-xs text-purple-700 font-bold">여행 의향 96.9%</span>
+                                    </div>
+                                    <h4 class="text-base font-bold text-purple-950 mb-2">초단기 여행 & 디지털·감성 융합</h4>
+                                    <ul class="text-xs text-slate-700 space-y-2">
+                                        <li>• <strong>AI 의존도:</strong> 74%가 일정 수립 및 비용 비교에 생성형 AI 활용.</li>
+                                        <li>• <strong>Micro-vacation:</strong> 1~2일 만에 다녀오는 초단기 여행 주도.</li>
+                                        <li>• <strong>이중적 성향:</strong> 디지털 AI 기술 활용(74%)과 수성 역행 등 행성 점성술 미신 신뢰(52%)의 공존.</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4 pt-3 border-t border-purple-200 text-xs font-bold text-purple-800">
+                                    주요 선호 성수기: 12월
+                                </div>
+                            </div>
+
+                            <!-- 5060 Senior Card -->
+                            <div class="bg-amber-50/60 p-5 rounded-lg border border-amber-200 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3 border-b border-amber-200 pb-2">
+                                        <span class="px-2.5 py-0.5 bg-amber-200 text-amber-900 text-xs font-bold rounded">5060 액티브 시니어</span>
+                                        <span class="text-xs text-amber-800 font-bold">여행 의향 96.4%</span>
+                                    </div>
+                                    <h4 class="text-base font-bold text-amber-950 mb-2">덕질 여행(Fandom Travel) & 다세대 자금줄</h4>
+                                    <ul class="text-xs text-slate-700 space-y-2">
+                                        <li>• <strong>팬덤 여행 비중:</strong> 27.2%로 20대(23.4%)를 제치고 콘서트/스포츠 여행 1위.</li>
+                                        <li>• <strong>합리적 명품 소비:</strong> 비수기 럭셔리, 성수기 가성비 숙소 비교 구매.</li>
+                                        <li>• <strong>다세대 여행:</strong> 조부모-부모-자녀 삼대(3代) 여행의 주 재정 후원자.</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4 pt-3 border-t border-amber-200 text-xs font-bold text-amber-800">
+                                    주요 선호 성수기: 8월 (전통 휴가철)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3040 Family Card -->
+                        <div class="bg-slate-100 p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="px-2.5 py-0.5 bg-slate-300 text-slate-800 text-xs font-bold rounded">3040 세대</span>
+                                    <span class="text-xs text-slate-700 font-bold">가족 여행 동반률 50% (1위)</span>
+                                </div>
+                                <p class="text-xs text-slate-700 mt-1">
+                                    대한항공 전체 이용객 중 3040 비중이 40%로 최고. 어린 자녀 중심 휴양지(동남아/괌/일본) 선호. 성수기는 10월 선호.
+                                </p>
+                            </div>
+                            <div class="text-right whitespace-nowrap bg-white p-2.5 rounded border border-slate-200">
+                                <span class="text-xs text-slate-500 block">반려동물 동반 경험</span>
+                                <span class="text-sm font-bold text-slate-900">10% (글로벌 7% 상회)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: CHANNELS & HANATOUR STRATEGY -->
+        <div id="tab-channels" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+                <div class="mb-6 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="w-1.5 h-4 bg-[#0055D4] rounded-full"></span>
+                        <span class="text-xs font-bold text-[#0055D4] uppercase tracking-wide">Distribution & Strategy</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">FIT(65%) 독주와 전통 여행사의 'M.O.M.E.N.T.U.M.' 승부수</h3>
+                    <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                        개별자유여행(FIT)이 65%로 최고치를 갱신하면서 저가 단체 패키지(28.5%) 시대가 종식되었습니다. 하나투어 등 주요 여행사들은 프리미엄화, 취향 커뮤니티(밍글링), AI 및 XR 기술 도입으로 피벗(Pivot)을 단행하고 있습니다.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- FIT vs Package Doughnut Chart -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <div class="mb-3 text-center border-b border-slate-200 pb-2">
+                            <h4 class="text-sm font-bold text-slate-900">여행 형태 변화 추이 (FIT vs 패키지)</h4>
+                            <span class="text-xs text-slate-500">컨슈머인사이트 2025-2026 데이터</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="channelChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- HanaTour MOMENTUM Accordion -->
+                    <div class="lg:col-span-2 bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <h4 class="text-sm font-bold text-slate-900 mb-3 flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span>하나투어 2026 전략 키워드: M.O.M.E.N.T.U.M.</span>
+                            <span class="text-xs text-[#0055D4] font-medium">클릭하여 세부 전략 확인</span>
+                        </h4>
+
+                        <div class="space-y-2">
+                            <!-- Key 1 -->
+                            <div class="border border-slate-200 rounded bg-white overflow-hidden">
+                                <button onclick="toggleAccordion('m-1')" class="w-full text-left px-4 py-3 font-bold text-xs text-slate-900 flex justify-between items-center bg-slate-100 hover:bg-slate-200/70 transition">
+                                    <span>M - Mindful Value (의식적 가치 소비)</span>
+                                    <span class="text-[#0055D4] font-bold text-sm" id="icon-m-1">+</span>
+                                </button>
+                                <div id="m-1" class="hidden px-4 py-3 text-xs text-slate-700 border-t border-slate-200 bg-white">
+                                    중고가 패키지 판매 비중 54%로 역대 최고치 경신. 쇼핑 강요 배제, 고급 숙소 중심 업그레이드.
+                                </div>
+                            </div>
+
+                            <!-- Key 2 -->
+                            <div class="border border-slate-200 rounded bg-white overflow-hidden">
+                                <button onclick="toggleAccordion('m-2')" class="w-full text-left px-4 py-3 font-bold text-xs text-slate-900 flex justify-between items-center bg-slate-100 hover:bg-slate-200/70 transition">
+                                    <span>O - Organic Vitality (자연 속 생명력)</span>
+                                    <span class="text-[#0055D4] font-bold text-sm" id="icon-m-2">+</span>
+                                </button>
+                                <div id="m-2" class="hidden px-4 py-3 text-xs text-slate-700 border-t border-slate-200 bg-white">
+                                    웰니스 중심 휴양. 해외 트레킹/자연 치유 상품 예약 전년 대비 +22% 증가.
+                                </div>
+                            </div>
+
+                            <!-- Key 3 -->
+                            <div class="border border-slate-200 rounded bg-white overflow-hidden">
+                                <button onclick="toggleAccordion('m-3')" class="w-full text-left px-4 py-3 font-bold text-xs text-slate-900 flex justify-between items-center bg-slate-100 hover:bg-slate-200/70 transition">
+                                    <span>M - My AI Companion & E - Exciting Feeling</span>
+                                    <span class="text-[#0055D4] font-bold text-sm" id="icon-m-3">+</span>
+                                </button>
+                                <div id="m-3" class="hidden px-4 py-3 text-xs text-slate-700 border-t border-slate-200 bg-white">
+                                    자체 AI 서비스 '하이(H-AI)' 이용자 1,154% 증가. 발리 릴스(700만 뷰) 직후 검색량 1,378건 폭증 등 숏폼 마케팅 연계.
+                                </div>
+                            </div>
+
+                            <!-- Key 4 -->
+                            <div class="border border-slate-200 rounded bg-white overflow-hidden">
+                                <button onclick="toggleAccordion('m-4')" class="w-full text-left px-4 py-3 font-bold text-xs text-slate-900 flex justify-between items-center bg-slate-100 hover:bg-slate-200/70 transition">
+                                    <span>T - Traveling with New People (새로운 만남)</span>
+                                    <span class="text-[#0055D4] font-bold text-sm" id="icon-m-4">+</span>
+                                </button>
+                                <div id="m-4" class="hidden px-4 py-3 text-xs text-slate-700 border-t border-slate-200 bg-white">
+                                    2030 전용 커뮤니티형 상품 '밍글링 투어' 이용객 전년 대비 +560% 폭증. 취향 기반 소모임 형태.
+                                </div>
+                            </div>
+
+                            <!-- Key 5 -->
+                            <div class="border border-slate-200 rounded bg-white overflow-hidden">
+                                <button onclick="toggleAccordion('m-5')" class="w-full text-left px-4 py-3 font-bold text-xs text-slate-900 flex justify-between items-center bg-slate-100 hover:bg-slate-200/70 transition">
+                                    <span>U - Unique Storytelling & M - Moment Seizing</span>
+                                    <span class="text-[#0055D4] font-bold text-sm" id="icon-m-5">+</span>
+                                </button>
+                                <div id="m-5" class="hidden px-4 py-3 text-xs text-slate-700 border-t border-slate-200 bg-white">
+                                    미술 전문가 동행 도쿄 기행 완판. 라이브 방송에 XR(확장현실) 도입하여 327만 조회 및 2,400명 예약 창출.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: MICRO TRENDS & REGULATORY VARIABLES -->
+        <div id="tab-trends" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+                <div class="mb-6 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="w-1.5 h-4 bg-rose-600 rounded-full"></span>
+                        <span class="text-xs font-bold text-rose-700 uppercase tracking-wide">Micro Trends & Policy Variables</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">현지 동화(Mart Attack) 및 ETIAS/유류할증료 행정 변수</h3>
+                    <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                        맛집 줄 서기 대신 현지 대형마트를 방문하는 '마트 어택(56%)'과 청결(72%) 중심 '노씽크 휴가'가 정착했습니다. 반면 EU 사전 승인제(ETIAS) 도입과 환율에 연동된 유류할증료 변동성은 예약 복잡성을 높이고 있습니다.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Micro Trends Panel -->
+                    <div class="space-y-4">
+                        <div class="bg-rose-50/60 border border-rose-200 p-5 rounded-lg">
+                            <h4 class="text-sm font-bold text-rose-950 mb-2 flex items-center gap-1.5">
+                                <span>🛒</span> 마트 어택 (Mart Attack) & 노씽크 휴가
+                            </h4>
+                            <p class="text-xs text-slate-700 leading-relaxed font-medium">
+                                한국인 여행객의 <strong>56%</strong>가 해외 유명 맛집 대기 대신 대형 마트나 슈퍼마켓을 필수 코스로 방문합니다. 식재료, 스낵, 주류를 구매하며 로컬 일상에 동화되는 미식 경험을 선호합니다. 또한 숙소 선택 시 **청결(72%, 글로벌 62% 상회)**을 최우선으로 삼고 복잡한 일정을 배제하는 '콰이어트케이션(Quiet-cation)'이 확산 중입니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-teal-50/60 border border-teal-200 p-5 rounded-lg">
+                            <h4 class="text-sm font-bold text-teal-950 mb-2 flex items-center gap-1.5">
+                                <span>🌿</span> 재생 관광(Regenerative Travel)과 안티 투어리즘
+                            </h4>
+                            <p class="text-xs text-slate-700 leading-relaxed font-medium">
+                                대도시 오버투어리즘 반발로 르완다, 보츠와나, 부탄처럼 관광객 수를 제약하거나 체류비를 책정한 독점적 자연 보호 구역이 버킷리스트로 부상했습니다. 철도(파리-바르셀로나) 이용 및 친환경 숙소 선택이 윤리적 럭셔리로 평가받습니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Policy & Regulation Readiness Tool -->
+                    <div class="bg-slate-900 text-white p-5 rounded-lg border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Global Travel Policy 2026</span>
+                            <h4 class="text-base font-bold text-white mt-1 mb-3 pb-2 border-b border-slate-800">🇪🇺 EU ETIAS 사전 승인제 점검 가이드</h4>
+                            
+                            <div class="space-y-3 text-xs text-slate-300">
+                                <div class="bg-slate-800/80 p-3 rounded border border-slate-700">
+                                    <strong class="text-white block mb-1">▪ 대상 국가 및 수수료</strong>
+                                    솅겐 30개국 입국 시 필수 사전 신청. 수수료 20유로 (18세 미만, 70세 초과 면제). 유효기간 최대 3년.
+                                </div>
+                                <div class="bg-slate-800/80 p-3 rounded border border-slate-700">
+                                    <strong class="text-white block mb-1">▪ 유의사항 (FIT 주의)</strong>
+                                    여권 번호 오기 시 탑승 거부 발생 우려. 전환·유예 기간 6개월 부여되나 공항 혼란 대비 필수.
+                                </div>
+                                <div class="bg-slate-800/80 p-3 rounded border border-slate-700">
+                                    <strong class="text-white block mb-1">⛽ 유류할증료 변동성 역설</strong>
+                                    유가 하락(배럴당 178$ ➔ 132$)에도 불구하고 1,500원대 고환율 적용으로 유류할증료 인하폭이 단 7%에 그치거나 뉴욕선 편도 +8,600원 인상 단행.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-800 text-center text-xs text-slate-400">
+                            * ETIAS 및 환율 연동 유류비 비교를 위해 생성형 AI/스카이스캐너 탐색 도구 이용률 급증
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- KRDS Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-600 space-y-2">
+            <p class="font-semibold text-slate-800">2026년 한국 해외여행 동향 및 산업 구조 재편 심층 분석 보고서 (KRDS 가이드라인 준수 대시보드)</p>
+            <p>출처: 야놀자리서치, 한국관광공사, 컨슈머인사이트, 스카이스캐너, 하나투어 M.O.M.E.N.T.U.M. 리포트</p>
+            <p class="text-slate-400 text-[11px] pt-2 border-t border-slate-100 max-w-md mx-auto">
+                본 대시보드는 대한민국 정부 디지털 서비스 가이드라인(KRDS)의 접근성 및 레이아웃 시스템을 참고하여 제작되었습니다.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript logic -->
+    <script>
+        // Tab Switch Logic with KRDS styling updates
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            // Reset tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('krds-tab-active');
+            });
+
+            // Show selected tab
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+                targetTab.classList.add('block');
+            }
+
+            // Highlight active button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('krds-tab-active');
+            }
+        }
+
+        // Japan Micro-City Explorer Interaction
+        const cityData = {
+            matsuyama: {
+                name: "마쓰야마 (Matsuyama) - 검색 +318%",
+                desc: "대도시 오버투어리즘과 숙박비 인상을 피해 온천과 가성비를 동시에 갖춘 대안 도시. 호텔 검색 트래픽 전년 대비 +825% 폭증."
+            },
+            miyakojima: {
+                name: "미야코지마 (Miyakojima) - 검색 +281%",
+                desc: "오키나와 본도를 대체하는 에메랄드빛 해변 휴양지. 럭셔리 휴양 및 소규모 프라이빗 자유여행 수요 급상승."
+            },
+            kitakyushu: {
+                name: "기타큐슈 (Kitakyushu) - 검색 +265%",
+                desc: "후쿠오카 밀집 현상을 분산시키는 대안 도시. 짧은 주말 1~2일 초단기 여행(Micro-vacation) 직항 수요 급증."
+            },
+            hiroshima: {
+                name: "히로시마 (Hiroshima) - 검색 +220%",
+                desc: "역사문화 탐방과 독특한 로컬 미식을 결합한 Z세대 및 FIT 자유여행객의 미식 어택 코스."
+            },
+            biei: {
+                name: "비에이 (Biei) - 검색 +204%",
+                desc: "홋카이도의 광활한 자연과 힐링을 추구하는 'Organic Vitality' 및 자연 친화 웰니스 여행지."
+            }
+        };
+
+        function showCityDetail(cityKey) {
+            const data = cityData[cityKey];
+            if (data) {
+                document.getElementById('city-title').innerText = data.name;
+                document.getElementById('city-desc').innerText = data.desc;
+            }
+        }
+
+        // Accordion Toggle Logic
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerText = '-';
+            } else {
+                content.classList.add('hidden');
+                icon.innerText = '+';
+            }
+        }
+
+        // Initialize Charts when DOM is loaded with KRDS Palette
+        document.addEventListener('DOMContentLoaded', () => {
+            // Label truncating helper (16 char limit)
+            const formatLabel = (str) => str.length > 16 ? str.substring(0, 14) + '..' : str;
+
+            // 1. MACRO CHART (Dual axis: Outbound vs Inbound & Balance - KRDS Blue & Teal Palette)
+            const ctxMacro = document.getElementById('macroChart').getContext('2d');
+            new Chart(ctxMacro, {
+                type: 'bar',
+                data: {
+                    labels: ['3월', '5월', '6월', '8월', '상반기 누적'],
+                    datasets: [
+                        {
+                            label: '내국인 출국자 (만 명)',
+                            data: [229.3, 234.0, 225.0, 243.1, 1496.2],
+                            backgroundColor: 'rgba(0, 85, 212, 0.85)',
+                            borderColor: '#0055D4',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: '방한 외래객 (만 명)',
+                            data: [204.5, 195.0, 220.0, 224.5, 1071.0],
+                            backgroundColor: 'rgba(0, 131, 143, 0.85)',
+                            borderColor: '#00838F',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw.toLocaleString() + '만 명';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { font: { size: 11 } } },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: '만 명', font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // 2. DESTINATION CHART (KRDS Standard Palette)
+            const ctxDest = document.getElementById('destinationChart').getContext('2d');
+            new Chart(ctxDest, {
+                type: 'bar',
+                data: {
+                    labels: ['일본 (🇯🇵)', '베트남 (🇻🇳)', '중국 (🇨🇳)', '미국 (🇺🇸)', '태국 (🇹🇭)'].map(formatLabel),
+                    datasets: [{
+                        label: '2026 상반기 방문객 (만 명)',
+                        data: [567.5, 216.1, 171.4, 63.2, 58.7],
+                        backgroundColor: [
+                            '#0055D4',
+                            '#00838F',
+                            '#D97706',
+                            '#E11D48',
+                            '#64748B'
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `방문객: ${ctx.raw}만 명`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: '만 명', font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // 3. Z-GEN AI USAGE CHART
+            const ctxAi = document.getElementById('aiUsageChart').getContext('2d');
+            new Chart(ctxAi, {
+                type: 'doughnut',
+                data: {
+                    labels: ['실시간 번역', '초개인화 맞춤 일정', '비용 비교 분석', '기타/탐색'],
+                    datasets: [{
+                        data: [37, 33, 20, 10],
+                        backgroundColor: ['#6B21A8', '#8B5CF6', '#A855F7', '#E9D5FF'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.label}: ${ctx.raw}%`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 4. CHANNEL CHART (FIT vs Package)
+            const ctxChannel = document.getElementById('channelChart').getContext('2d');
+            new Chart(ctxChannel, {
+                type: 'pie',
+                data: {
+                    labels: ['개별자유여행 (FIT)', '단체 패키지', '기타 특화 투어'],
+                    datasets: [{
+                        data: [65.0, 28.5, 6.5],
+                        backgroundColor: ['#0055D4', '#CBD5E1', '#D97706'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.label}: ${ctx.raw}%`
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
